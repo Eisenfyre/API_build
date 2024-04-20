@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="patientForm">
+
+        <input type="hidden" id="patientIndex" name="patientIndex">
+
+        <label for="name">Patient Name</label>
+        <input type="text" name="name" id="name" value="John" required>
+
+        <br>
+        <br>
+        <label for="hospitalLocation">Hospital Location</label>
+        <input type="text" name="hospitalLocation" id="hospitalLocation" value="sunday hospital" required>
+
+        <br>
+        <br>
+        <label for="dateOfBirth">Date Of Birth</label>
+        <input type="date" name="dateOfBirth" id="dateOfBirth" value="1999-05-14" required>
+
+        <br>
+        <br>
+
+        <button onclick="submitPatientData()" type="button">Submit Patient Data</button>
+    </form>
+
+<div id="patientList" class="patient-list-container">
+        <h2>All Patients</h2>
+        <p id="formHeading"> </p>
+    </div>
+
+    <script>
+        //Examples of fuctions
+        function submitPatientData(){
+            //debugger (just for debuggting)
+            console.log(" BRUH");
+
+            //Data to be saved
+            let form = document.getElementById('patientForm')
+            const index = form.elements['patientIndex'].value;
+
+            const formData = {
+                name: form.elements['name'].value,
+                hospitalLocation: form.elements['hospitalLocation'].value,
+                dateOfBirth: form.elements['dateOfBirth'].value
+            };
+
+            //console.log(formData)// THIS SI JUST FOR SEEING IF WE GOT ALL THE VALUES RIGHT AT THE MOMENT
+            console.log(JSON.stringify(formData, null, 2))
+            //We have our API end points
+            //FOr exampel we visitedf umm.... localhost 1234 to mactvh opur express endpoint
+
+            const url = 'http://localhost:1234/save-patient-data';
+            const method = index ? "PUT" : "POST";
+            //url is Apiurl
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type" : "application/json"},
+                body: JSON.stringify(formData),
+            }).then(response => response.json())
+            .then(data => {
+                console.log("Sucess:", data);
+                alert("Patient data has been submitted sucessfully");
+                form.reset();
+                
+                let justchecking = document.getElementById('formHeading').innerText;
+                justchecking = "Enter new information";
+                console.log("JUST CHEKING IS IT HERE????",justchecking);
+                
+                loadPatientData();
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("An errro occured duitn data submisison");
+            })
+
+
+        }
+    </script>
+</body>
+</html>
